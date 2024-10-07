@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using ApiHotel.Models;
 
 namespace ApiHotel.Repositories
-{
+{   
+    //interface
     public interface IGuestRepository
     {
         Task Register(Guest guest);

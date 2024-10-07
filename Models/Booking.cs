@@ -10,6 +10,7 @@ namespace ApiHotel.Models
     [Table("bokings")]
     public class Booking
     {
+        //properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
@@ -43,7 +44,7 @@ namespace ApiHotel.Models
         [Column("total_cost")]
         public double TotalCost { get; set; }
 
-
+        // contructor
         public Booking(int roomId, int guestId, int employeeId, DateTime startDate,  DateTime endDate, double totalCost)
         {
             RoomId = roomId;
@@ -53,7 +54,7 @@ namespace ApiHotel.Models
             EndDate  = endDate;
             TotalCost = totalCost;
         }
-
+        
         public Booking()
         {
         }

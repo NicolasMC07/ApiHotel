@@ -8,6 +8,7 @@ using ApiHotel.DTOs;
 using ApiHotel.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace ApiHotel.Controllers.V1.Auth
 {
@@ -19,14 +20,18 @@ namespace ApiHotel.Controllers.V1.Auth
         private readonly AppDbContext _context;
         private readonly Utilities _utilities;
 
-
         public AuthController(AppDbContext context, Utilities utilities)
         {
             _context = context;
             _utilities = utilities;
         }
-
+    
+        //Register endpoint
         [HttpPost("/api/v1/auth/register")]
+        [SwaggerOperation(
+            Summary = "Register a new employee",
+            Description = "Creates a new employee record after validating the provided information and ensuring the email is not already in use."
+        )]
         public async Task<IActionResult> Register(Employe employe)
         {
             if (!ModelState.IsValid)
@@ -40,13 +45,17 @@ namespace ApiHotel.Controllers.V1.Auth
             }
 
             employe.Password = _utilities.EncryptSHA256(employe.Password);
-
             _context.Employes.Add(employe);
             await _context.SaveChangesAsync();
             return Ok("User registered successfully");
         }
 
+        //Login endpoint
         [HttpPost("/api/v1/auth/login")]
+        [SwaggerOperation(
+            Summary = "Employee login",
+            Description = "Authenticates an employee using their email and password, returning a JWT token if successful."
+        )]
         public async Task<IActionResult> Login(EmployeeDto employeeDto)
         {
             if (!ModelState.IsValid)
@@ -57,20 +66,20 @@ namespace ApiHotel.Controllers.V1.Auth
             var Employe = await _context.Employes.FirstOrDefaultAsync(u => u.Email == employeeDto.Email);
             if (Employe == null)
             {
-                return Unauthorized("Email ivalido");
+                return Unauthorized("Invalid email");
             }
 
             var passwordIsValid = Employe.Password == _utilities.EncryptSHA256(employeeDto.Password);
 
-            if (passwordIsValid == false)
+            if (!passwordIsValid)
             {
-                return Unauthorized("Contraseña invalida");
+                return Unauthorized("Invalid password");
             }
 
             var token = _utilities.GenerateJwtToken(Employe);
             return Ok(new
             {
-                message = "Por favor guarde este token: ",
+                message = "Please store this token:",
                 jwt = token
             });
         }

@@ -10,6 +10,7 @@ namespace ApiHotel.Data
 {
     public class AppDbContext : DbContext
     {   
+        //Tables
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Guest> Guests  { get; set; }
@@ -20,6 +21,7 @@ namespace ApiHotel.Data
         {
         }
 
+        // Model creating
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -9,7 +9,8 @@ namespace ApiHotel.Models
 {   
     [Table("employes")]
     public class Employe
-    {
+    {   
+        // properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
@@ -30,7 +31,7 @@ namespace ApiHotel.Models
         [Column("password")]
         public string? Password { get; set; }
 
-
+        //constructor
         public Employe(string id, string firstName, string lastName,  string email, string identificationNumber, string password)
         {
             FirstName  = firstName.ToLower().Trim();

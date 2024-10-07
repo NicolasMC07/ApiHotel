@@ -6,11 +6,13 @@ using ApiHotel.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiHotel.Seeders
-{
+{   
+    //seeder class
     public class RoomSeeder
     {
         public static void Seed(ModelBuilder modelBuilder)
-        {
+        {   
+            // seeder data
             modelBuilder.Entity<Room>().HasData(
                 new Room { Id = 1, RoomNumber = "1-1", RoomTypeId = 1, PricePerNight = 50.0, Availability = true, MaxOccupancyPersons = 1 },
                 new Room { Id = 2, RoomNumber = "1-2", RoomTypeId = 1, PricePerNight = 50.0, Availability = false, MaxOccupancyPersons = 1 },

@@ -9,7 +9,8 @@ namespace ApiHotel.Models
 {   
     [Table("guests")]
     public class Guest
-    {
+    {   
+        //properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
@@ -36,6 +37,7 @@ namespace ApiHotel.Models
         [Column("birthdate")]
         public DateTime? Birthdate { get; set; }
 
+        //contructor
         public Guest(string firstName, string lastName, string  email, string identificationNumber, string phoneNumber, DateTime birthdate)
         {
             FirstName  = firstName.ToLower().Trim();

@@ -10,7 +10,7 @@ namespace ApiHotel.Models
     [Table("room_types")]
     public class RoomType
     {
-
+        //properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
@@ -21,6 +21,8 @@ namespace ApiHotel.Models
 
         [Column("description")]
         public string? Description { get; set; }
+
+        //constructor
         public RoomType(string name, string description)
         {
             Name = name.ToLower().Trim();

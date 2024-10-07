@@ -9,6 +9,7 @@ namespace ApiHotel.Controllers.V1.GuestControllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    // Main GuestController
     public class GuestController : ControllerBase
     {
         protected readonly IGuestRepository _guestRepository;

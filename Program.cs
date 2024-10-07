@@ -11,21 +11,27 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Load environment variables from .env file
 Env.Load();
 
+// Configure database connection using environment variables
 var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
 var dbPort = Environment.GetEnvironmentVariable("DB_PORT");
 var dbDatabaseName = Environment.GetEnvironmentVariable("DB_DATABASE");
 var dbUser = Environment.GetEnvironmentVariable("DB_USERNAME");
 var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
 
-var conectionDB = $"server={dbHost};port={dbPort};database={dbDatabaseName};uid={dbUser};password={dbPassword}";
+// Build the connection string for MySQL
+var connectionDB = $"server={dbHost};port={dbPort};database={dbDatabaseName};uid={dbUser};password={dbPassword}";
 
+// Add DbContext with MySQL configuration
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(conectionDB, ServerVersion.Parse("8.0.20-mysql")));
+    options.UseMySql(connectionDB, ServerVersion.Parse("8.0.20-mysql")));
 
+// Register utility services for encryption and token generation
 builder.Services.AddSingleton<Utilities>();
+
+// Configure authentication using JWT Bearer
 builder.Services.AddAuthentication(config =>
 {
     config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -33,35 +39,36 @@ builder.Services.AddAuthentication(config =>
     config.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(config =>
 {
-    config.RequireHttpsMetadata = false;
-    config.SaveToken = true;
+    config.RequireHttpsMetadata = false; // Set to true in production
+    config.SaveToken = true; // Save the token in the AuthenticationProperties
     config.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
-        ValidateAudience = false,
+        ValidateAudience = false, // Audience validation can be enabled if needed
         ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero,
+        ValidateLifetime = true, // Validate the token lifetime
+        ClockSkew = TimeSpan.Zero, // No delay before token expiration
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY")!))
     };
 });
 
+// Add services for controllers
 builder.Services.AddControllers();
 
-
-// Services
+// Register repositories with dependency injection
 builder.Services.AddScoped<IBookingRepository, BookingServices>();
 builder.Services.AddScoped<IGuestRepository, GuestServices>();
 builder.Services.AddScoped<IRoomRepository, RoomServices>();
 builder.Services.AddScoped<IRoomTypeRepository, RoomTypeServices>();
 
-
+// Add API documentation and Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api Hotel", Version = "v1" });
-
+    
+    // Configure security definition for JWT
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
@@ -71,6 +78,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer"
     });
 
+    // Add security requirement for the API
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -87,25 +95,32 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-var app = builder.Build();
+var app = builder.Build(); // Build the application
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwagger(); // Enable Swagger in development mode
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api Hotel v1"); // Specify the endpoint for Swagger UI
+        c.RoutePrefix = string.Empty; // Serve the Swagger UI at the app's root
+    });
 }
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection(); // Redirect HTTP requests to HTTPS
 
-app.UseAuthorization();
+app.UseAuthentication();
 
+app.UseAuthorization(); // Enable authorization middleware
+
+// Optional welcome page
 app.UseWelcomePage(new WelcomePageOptions
 {
     Path = "/"
 });
 
-
+// Map controller routes
 app.MapControllers();
 
-app.Run();
+app.Run(); // Run the application

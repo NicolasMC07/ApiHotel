@@ -10,6 +10,8 @@ namespace ApiHotel.Controllers.V1.BookingControllers
     [ApiController]
     [Route("api/[controller]")]
     [ApiExplorerSettings(GroupName = "v1")]
+
+    // main BookingController
     public class BookingController : ControllerBase
     {
         protected readonly IBookingRepository _bookingRepository;

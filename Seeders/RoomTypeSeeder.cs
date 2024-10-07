@@ -6,11 +6,13 @@ using ApiHotel.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiHotel.Seeders
-{
+{   
+    //seeder class
     public class RoomTypeSeeder
-    {
+    {   
         public static void Seed(ModelBuilder modelBuilder)
-        {
+        {   
+            // seeder data
             modelBuilder.Entity<RoomType>().HasData(
                 new RoomType { Id = 1, Name = "Habitación Simple", Description = "Una acogedora habitación básica con una cama individual, ideal para viajeros solos." },
                 new RoomType { Id = 2, Name = "Habitación Doble", Description = "Ofrece flexibilidad con dos camas individuales o una cama doble, perfecta para parejas o amigos." },

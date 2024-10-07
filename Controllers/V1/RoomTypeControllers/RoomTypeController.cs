@@ -9,6 +9,7 @@ namespace ApiHotel.Controllers.V1.RoomTypeControllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    // Main RoomTypeController
     public class RoomTypeController : ControllerBase
     {
         protected readonly IRoomTypeRepository _roomTypeRepository;

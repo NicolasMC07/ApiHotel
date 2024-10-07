@@ -6,10 +6,11 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace ApiHotel.Models
-{   
+{
     [Table("rooms")]
     public class Room
     {
+        // properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
@@ -33,7 +34,8 @@ namespace ApiHotel.Models
         [Column("max_occupancy_person")]
         public byte MaxOccupancyPersons { get; set; }
 
-         public Room(string roomNumber, int roomTypeId, double pricePerNight, bool availability, byte maxOccupancyPersons)
+        // contructor
+        public Room(string roomNumber, int roomTypeId, double pricePerNight, bool availability, byte maxOccupancyPersons)
         {
             RoomNumber = roomNumber.Trim();
             RoomTypeId = roomTypeId;
