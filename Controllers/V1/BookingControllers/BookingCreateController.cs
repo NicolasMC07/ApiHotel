@@ -5,19 +5,22 @@ using System.Threading.Tasks;
 using ApiHotel.DTOs;
 using ApiHotel.Models;
 using ApiHotel.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHotel.Controllers.V1.BookingControllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/booking_create")]
+    [ApiExplorerSettings(GroupName = "v1")]
     public class BookingCreateController : BookingController
     {
         public BookingCreateController(IBookingRepository bookingRepository) : base(bookingRepository)
         {
         }
 
-        [HttpPost]
+        [HttpPost("/api/v1/bookings")]
+        [Authorize]
         public async Task<IActionResult> CreateBooking(BookingDto bookingDto)
         {
             if (!ModelState.IsValid)

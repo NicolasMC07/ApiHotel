@@ -4,19 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApiHotel.DTOs;
 using ApiHotel.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHotel.Controllers.V1.GuestControllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/guest_update")]
+    [ApiExplorerSettings(GroupName = "v1")]
     public class GuestUpdateController : GuestController
     {
         public GuestUpdateController(IGuestRepository guestRepository) : base(guestRepository)
         {
         }
 
-         [HttpPut("{id}")]
+         [HttpPut("/api/v1/guests/{id}")]
+         [Authorize]
         public async Task<IActionResult> Update(int id, GuestDto guestDto)
         {   
 

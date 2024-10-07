@@ -5,13 +5,15 @@ using System.Threading.Tasks;
 using ApiHotel.Config;
 using ApiHotel.Data;
 using ApiHotel.DTOs;
+using ApiHotel.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiHotel.Controllers.V1.Auth
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("/api/v1/auth")]
+    [ApiExplorerSettings(GroupName = "v1")]
     public class AuthController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -24,7 +26,27 @@ namespace ApiHotel.Controllers.V1.Auth
             _utilities = utilities;
         }
 
-        [HttpPost("login")]
+        [HttpPost("/api/v1/auth/register")]
+        public async Task<IActionResult> Register(Employe employe)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (_context.Employes.Any(u => u.Email == employe.Email))
+            {
+                return BadRequest("Email already exists");
+            }
+
+            employe.Password = _utilities.EncryptSHA256(employe.Password);
+
+            _context.Employes.Add(employe);
+            await _context.SaveChangesAsync();
+            return Ok("User registered successfully");
+        }
+
+        [HttpPost("/api/v1/auth/login")]
         public async Task<IActionResult> Login(EmployeeDto employeeDto)
         {
             if (!ModelState.IsValid)

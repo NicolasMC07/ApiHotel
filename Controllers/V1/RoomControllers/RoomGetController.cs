@@ -4,19 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApiHotel.Models;
 using ApiHotel.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHotel.Controllers.V1.RoomControllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/rooms_get")]
+    [ApiExplorerSettings(GroupName = "v1")]
     public class RoomGetController : RoomController
     {
         public RoomGetController(IRoomRepository roomRepository) : base(roomRepository)
         {
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("/api/v1/rooms/{id}")]
+        [Authorize]
         public async Task<ActionResult<Room>> GetById(int id)
         {
             var room = await _roomRepository.GetById(id);
@@ -27,14 +30,15 @@ namespace ApiHotel.Controllers.V1.RoomControllers
             return room;
         }
 
-        [HttpGet]
+        [HttpGet("/api/v1/rooms")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Room>>> GetAll()
         {
             var rooms = await _roomRepository.GetAll();
             return Ok(rooms);
         }
 
-        [HttpGet("status")]
+        [HttpGet("/api/v1/rooms/status")]
         public async Task<ActionResult<object>> GetRoomStatus()
         {
 
@@ -46,14 +50,15 @@ namespace ApiHotel.Controllers.V1.RoomControllers
             return Ok(status);
         }
 
-        [HttpGet("available")]
+        [HttpGet("/api/v1/rooms/available")]
         public async Task<ActionResult<IEnumerable<Room>>> GetAvailable()
         {
             var rooms = await _roomRepository.GetAvailable();
             return Ok(rooms);
         }
 
-        [HttpGet("occupied")]
+        [HttpGet("/api/v1/rooms/occupied")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Room>>> GetOccupied()
         {
             var rooms = await _roomRepository.GetOccupied();

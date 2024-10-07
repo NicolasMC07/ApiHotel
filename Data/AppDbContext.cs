@@ -27,7 +27,7 @@ namespace ApiHotel.Data
             //Seeders
             RoomTypeSeeder.Seed(modelBuilder);
             RoomSeeder.Seed(modelBuilder);
-
+            
         }
 
     }

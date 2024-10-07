@@ -10,14 +10,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApiHotel.Controllers.V1.GuestControllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/guest_create")]
+    [ApiExplorerSettings(GroupName = "v1")]
     public class GuestCreateController : GuestController
     {
         public GuestCreateController(IGuestRepository guestRepository) : base(guestRepository)
         {            
         }
 
-        [HttpPost]
+        [HttpPost("/api/v1/guest")]
         public async Task<IActionResult> CreateBooking(GuestDto guestDto)
         {
             if (!ModelState.IsValid)
