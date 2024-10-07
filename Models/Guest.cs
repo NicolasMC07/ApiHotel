@@ -29,7 +29,7 @@ namespace ApiHotel.Models
         public string? IdentificationNumber { get; set; }
 
         [Column("phone_number")]
-        public required string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
         
         [DataType(DataType.Date)]
