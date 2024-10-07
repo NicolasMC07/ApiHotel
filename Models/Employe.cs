@@ -24,12 +24,9 @@ namespace ApiHotel.Models
         [Column("email")]
         public string? Email { get; set; }
 
-
         [Column("identification_number")]
         public string? IdentificationNumber { get; set; }
 
-        [Required]
-        [StringLength(255)]
         [Column("password")]
         public string? Password { get; set; }
 
