@@ -8,6 +8,9 @@ namespace ApiHotel.Repositories
 {
     public interface IBookingRepository
     {
-        
+        Task<IEnumerable<Booking>> FindByIdentification(string identificationNumber);
+        Task<Booking?> GetById(int id);
+        Task Create(Booking booking);
+        Task Delete(int id);
     }
 }
