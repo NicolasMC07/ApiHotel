@@ -13,6 +13,6 @@ namespace ApiHotel.Repositories
         Task<Guest?> GetById(int id);
         Task Update(Guest guest);
         Task Delete(int id);
-        Task<IEnumerable<Guest>> GetByKeyword(string keyword);
+        Task<Guest?> GetByKeyword(string keyword);
     }
 }

@@ -10,8 +10,9 @@ namespace ApiHotel.Repositories
     {
         Task<IEnumerable<Room>> GetAll();
         Task<Room?> GetById(int id);
-        Task<IEnumerable<Room>> GetAvailableAsync();
-        Task<IEnumerable<Room>> GetOccupiedAsync();
-        Task<(int available, int occupied)> GetRoomStatusAsync();
+        Task<IEnumerable<Room>> GetAvailable();
+        Task<IEnumerable<Room>> GetOccupied();
+        Task<object> GetRoomStatus();
+        
     }
 }
