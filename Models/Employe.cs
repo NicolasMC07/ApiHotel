@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ApiHotel.Models
 {   
-    [Table("employe")]
+    [Table("employes")]
     public class Employe
     {
         [Key]
