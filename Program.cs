@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
-var builder = WebApplication.CreateBuilder(args);
 
 // Load environment variables from .env file
 Env.Load();
@@ -23,6 +22,9 @@ var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
 
 // Build the connection string for MySQL
 var connectionDB = $"server={dbHost};port={dbPort};database={dbDatabaseName};uid={dbUser};password={dbPassword}";
+
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add DbContext with MySQL configuration
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -51,6 +53,19 @@ builder.Services.AddAuthentication(config =>
         ClockSkew = TimeSpan.Zero, // No delay before token expiration
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY")!))
     };
+});
+
+// Configuración de CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .WithOrigins("http://127.0.0.1:5500")
+            .AllowAnyOrigin()  // Permitir solicitudes desde cualquier origen
+            .AllowAnyMethod()  // Permitir cualquier método HTTP (GET, POST, PUT, DELETE, etc.)
+            .AllowAnyHeader(); // Permitir cualquier encabezado
+    });
 });
 
 // Add services for controllers
@@ -95,6 +110,11 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddSwaggerGen(c =>    
+{    
+   c.EnableAnnotations();    
+});  
+
 var app = builder.Build(); // Build the application
 
 // Configure the HTTP request pipeline
@@ -107,6 +127,9 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty; // Serve the Swagger UI at the app's root
     });
 }
+
+// Usar CORS
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection(); // Redirect HTTP requests to HTTPS
 
